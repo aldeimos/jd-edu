@@ -1,8 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import './TodoItem.scss';
+import {Context} from "../../context";
 
 const TodoItem = (props) => {
-    const {id, text, done, deleteTodo, toggleDoneStatus} = props;
+    const {id, text, done} = props;
+    const {deleteTodo, toggleDoneStatus} = useContext(Context);
+
     const classes = ['todo-item'];
     if (done) {
         classes.push('todo-item_done')

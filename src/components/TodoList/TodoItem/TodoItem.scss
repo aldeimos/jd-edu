@@ -16,7 +16,12 @@
     font-weight: 600;
   }
   &__subject {
+    width: 210px;
     margin-right: auto;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   &__button {
     padding: 5px;

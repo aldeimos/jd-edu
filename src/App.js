@@ -1,16 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.scss';
 import TodoList from "./components/TodoList/TodoList";
 import AddTodo from "./components/AddTodo/AddTodo";
+import {Context} from "./components/context";
 
 const App = (props) => {
-    const [todos, setTodos] = useState([
-        {id: 1, text: 'Почитать про useState', done: false},
-        {id: 2, text: 'Почитать про useEffect', done: false},
-        {id: 3, text: 'Почитать про useCallback', done: false},
-    ]);
-
+    const [todos, setTodos] = useState([]);
     const [todoTitle, setTodoTitle] = useState('');
+
+    useEffect(() => {
+        const raw = localStorage.getItem('todos') || [];
+        setTodos(JSON.parse(raw));
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos]);
 
     const deleteTodo = (id) => {
         setTodos([
@@ -19,17 +24,12 @@ const App = (props) => {
     };
 
     const toggleDoneStatus = (id) => {
-        setTodos([
-            ...todos.map(todo => {
-                if (todo.id === id) {
-                    return {
-                        ...todo,
-                        done: !todo.done
-                    }
-                }
-                return todo;
-            })
-        ])
+        setTodos(todos.map(todo => {
+            if (todo.id === id) {
+                todo.done = !todo.done;
+            }
+            return todo;
+        }))
     };
 
     const addTodo = (e) => {
@@ -47,11 +47,18 @@ const App = (props) => {
     };
 
   return (
-    <div className={'app container'}>
-      <h1 className={'app__title'}>Ультимейт тудулист на хуках</h1>
-        <AddTodo todoTitle={todoTitle} setTodoTitle={setTodoTitle} addTodo={addTodo}/>
-      <TodoList todos={todos} deleteTodo={deleteTodo} toggleDoneStatus={toggleDoneStatus}/>
-    </div>
+    <Context.Provider value={{
+        deleteTodo,
+        toggleDoneStatus,
+        addTodo,
+        setTodoTitle
+    }}>
+        <div className={'app container'}>
+            <h1 className={'app__title'}>Ультимейт тудулист на хуках</h1>
+            <AddTodo todoTitle={todoTitle} />
+            <TodoList todos={todos} />
+        </div>
+    </Context.Provider>
   )
 }
 

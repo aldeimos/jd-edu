@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
+
+import {Context} from "../context";
 
 import './AddTodo.scss';
-const AddTodo = ({todoTitle, setTodoTitle, addTodo}) => {
+const AddTodo = ({todoTitle}) => {
+    const {setTodoTitle, addTodo} = useContext(Context);
     return (
         <div className={'add-todo'}>
             <input className={'add-todo__input'} value={todoTitle} type="text" placeholder="Введите заголовок "
