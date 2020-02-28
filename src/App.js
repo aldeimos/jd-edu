@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import './App.scss';
+import TodoList from "./components/TodoList/TodoList";
+import AddTodo from "./components/AddTodo/AddTodo";
 
-function App() {
+const App = (props) => {
+    const [todos, setTodos] = useState([
+        {id: 1, text: 'Почитать про useState', done: false},
+        {id: 2, text: 'Почитать про useEffect', done: false},
+        {id: 3, text: 'Почитать про useCallback', done: false},
+    ]);
+
+    const [todoTitle, setTodoTitle] = useState('');
+
+    const deleteTodo = (id) => {
+        setTodos([
+            ...todos.filter(todo => todo.id !== id)
+        ])
+    };
+
+    const toggleDoneStatus = (id) => {
+        setTodos([
+            ...todos.map(todo => {
+                if (todo.id === id) {
+                    return {
+                        ...todo,
+                        done: !todo.done
+                    }
+                }
+                return todo;
+            })
+        ])
+    };
+
+    const addTodo = (e) => {
+        if (e.key === 'Enter') {
+            setTodos([
+                ...todos,
+                {
+                    id: Date.now(),
+                    text: todoTitle,
+                    done: false
+                }
+            ]);
+            setTodoTitle('');
+        }
+    };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={'app container'}>
+      <h1 className={'app__title'}>Ультимейт тудулист на хуках</h1>
+        <AddTodo todoTitle={todoTitle} setTodoTitle={setTodoTitle} addTodo={addTodo}/>
+      <TodoList todos={todos} deleteTodo={deleteTodo} toggleDoneStatus={toggleDoneStatus}/>
     </div>
-  );
+  )
 }
 
 export default App;
